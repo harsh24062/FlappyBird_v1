@@ -8,7 +8,7 @@ public class Bird {
     int birdHeight; //bird Height on screen
     Image birdImage;
 
-    Bird(int birdX, int birdY, int birdWidth, int birdHeight, Image birdImage){
+    public Bird(int birdX, int birdY, int birdWidth, int birdHeight, Image birdImage){
      this.birdX = birdX;
      this.birdY = birdY;
      this.birdWidth = birdWidth;
