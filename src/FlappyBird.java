@@ -28,6 +28,8 @@ public class FlappyBird extends JPanel implements ActionListener {
 
     // game logic
     Bird bird;
+    int birdVelocityY = -6;  // its minus as it goes towards zero at upper part 
+    int gravityY = 2;  // bird will go down as gravity pull 
 
     // game loop
     Timer gameLoop;
@@ -45,7 +47,7 @@ public class FlappyBird extends JPanel implements ActionListener {
         bird = new Bird(birdX, birdY, birdWidth, birdHeight, birdImage);
 
         //game timer
-        gameLoop = new Timer(1000/60, this);
+        gameLoop = new Timer(1000/60, this); // 60 frame per second
         //start the timer
         gameLoop.start();
     }
@@ -54,7 +56,7 @@ public class FlappyBird extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
         //Adding background image
         g.drawImage(backgroundImage, 0, 0, screenWidth, screenHeight, null);
 
@@ -65,7 +67,22 @@ public class FlappyBird extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        moveBird();
         repaint(); // it calls paintComponent(Graphics g) to draw new image 
+    }
+
+
+    // move the bird
+    public void moveBird(){
+        bird.birdY+= birdVelocityY;
+        birdVelocityY+= gravityY; // adding gravity
+
+        if(bird.birdY<0){
+          bird.birdY = Math.max(bird.birdY, 0); // bird must not get out from screen
+        }else if(bird.birdY>screenHeight){
+        bird.birdY = Math.min(bird.birdY, screenHeight);
+        }
+
     }
   
 
