@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -26,8 +28,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     //bird position
     int birdX = screenWidth/8;
     int birdY = screenHeight/2;
-    int birdWidth = 40;
-    int birdHeight = 30;
+    int birdWidth = 35;
+    int birdHeight = 25;
 
     // Adding pipes
     int pipeX = screenWidth; //starting location of pipe
@@ -49,8 +51,12 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     // pipe Adding Timer
     Timer pipeTimer;
-
+    
+    // gameOver flag
     boolean gameOver = false;   // if its true then gameover, bird touch pipe or bird fall down to  ground
+    
+    // Total Score
+    double score = 0;
 
     FlappyBird(){
         setPreferredSize(new DimensionUIResource(screenWidth, screenHeight));
@@ -100,6 +106,17 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
             Pipe pipe = pipes.get(i);
             g.drawImage(pipe.pipeImage, pipe.pipeX, pipe.pipeY, pipe.pipeWidth, pipe.pipeHeight, null);
         }
+
+        // Adding score
+        if(gameOver){
+            g.setColor(Color.MAGENTA);
+            g.setFont(new Font("Arial", Font.BOLD, 25));
+            g.drawString("GameOver! Your Score: "+String.valueOf((int)score),20, 320);
+        }else{
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 32));
+            g.drawString(String.valueOf((int)score),10, 35);
+        }
     }
 
 
@@ -128,20 +145,29 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     // move the pipes
     public void movePipes(){
+
         for(int i=0;i<pipes.size();i++){
+            
             Pipe pipe = pipes.get(i);
             pipe.pipeX+=pipeVelocityX;
+
+            if(!pipe.isPassed && bird.birdX > pipe.pipeX + pipe.pipeWidth){
+                pipe.isPassed = true;
+                score+=0.5;
+            }
+
             if(birdCollision(bird,pipe)){
                 gameOver=true;
             }
         }
+
     }
 
 
     @Override
     public void keyPressed(KeyEvent e) {
        if(e.getKeyCode()==KeyEvent.VK_SPACE){
-        birdVelocityY=-8;
+        birdVelocityY=-9;
        }
     }
 
