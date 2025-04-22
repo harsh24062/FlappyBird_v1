@@ -50,6 +50,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     // pipe Adding Timer
     Timer pipeTimer;
 
+    boolean gameOver = false;   // if its true then gameover, bird touch pipe or bird fall down to  ground
+
     FlappyBird(){
         setPreferredSize(new DimensionUIResource(screenWidth, screenHeight));
         
@@ -68,7 +70,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
         //placePipes timer
 
-        pipeTimer = new Timer(1500, new ActionListener() {
+        pipeTimer = new Timer(1700, new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e){
             placePipes();
@@ -106,6 +108,10 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         moveBird();
         movePipes();
         repaint(); // it calls paintComponent(Graphics g) to draw new image 
+        if(gameOver){
+            pipeTimer.stop();
+            gameLoop.stop();
+        }
     }
 
 
@@ -114,10 +120,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         bird.birdY+= birdVelocityY;
         birdVelocityY+= gravityY; // adding gravity
 
-        if(bird.birdY<0){
-          bird.birdY = Math.max(bird.birdY, 0); // bird must not get out from screen
-        }else if(bird.birdY>screenHeight){
-        bird.birdY = Math.min(bird.birdY, screenHeight);
+        if(bird.birdY<0 || bird.birdY>screenHeight){
+         gameOver=true;
         }
 
     }
@@ -127,6 +131,9 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         for(int i=0;i<pipes.size();i++){
             Pipe pipe = pipes.get(i);
             pipe.pipeX+=pipeVelocityX;
+            if(birdCollision(bird,pipe)){
+                gameOver=true;
+            }
         }
     }
 
@@ -134,7 +141,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
        if(e.getKeyCode()==KeyEvent.VK_SPACE){
-        birdVelocityY=-10;
+        birdVelocityY=-8;
        }
     }
 
@@ -160,5 +167,13 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
       pipes.add(bottomPipe);
     }
   
+
+    public boolean birdCollision(Bird bird, Pipe pipe){    // bird collide with pipe
+       return bird.birdX < pipe.pipeX + pipe.pipeWidth &&
+              bird.birdX + bird.birdWidth > pipe.pipeX &&
+              bird.birdY < pipe.pipeY + pipe.pipeHeight &&
+              bird.birdY + bird.birdHeight > pipe.pipeY;
+              
+    }     
 
 }
