@@ -17,21 +17,38 @@ public class FlappyBird extends JPanel {
     Image topPipeImage;
     Image bottomPipeImage;
 
+    //bird position
+    int birdX = screenWidth/8;
+    int birdY = screenHeight/2;
+    int birdWidth = 40;
+    int birdHeight = 30;
+
+    // game logic
+    Bird bird;
+
     FlappyBird(){
         setPreferredSize(new DimensionUIResource(screenWidth, screenHeight));
         setBackground(Color.BLUE);
 
+        //get All images 
         backgroundImage = new ImageIcon(getClass().getClassLoader().getResource("resources/images/flappybirdbg.png")).getImage();
         birdImage = new ImageIcon(getClass().getClassLoader().getResource("resources/images/flappybird.png")).getImage();
         topPipeImage = new ImageIcon(getClass().getClassLoader().getResource("resources/images/toppipe.png")).getImage();
         bottomPipeImage = new ImageIcon(getClass().getClassLoader().getResource("resources/images/bottompipe.png")).getImage();
+
+        bird = new Bird(birdX, birdY, birdWidth, birdHeight, birdImage);
     }
 
+  
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Draw the image to fill the panel
+
+        //Adding background image
         g.drawImage(backgroundImage, 0, 0, screenWidth, screenHeight, null);
+
+        //Adding bird image
+        g.drawImage(bird.birdImage, bird.birdX, bird.birdY, bird.birdWidth, bird.birdHeight, null);
     }
   
 
