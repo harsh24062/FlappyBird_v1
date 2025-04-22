@@ -16,6 +16,7 @@ public class Frame {
 
         frame.add(flappyBird);
         frame.pack();
+        flappyBird.requestFocusInWindow();
 
         frame.setVisible(true);
     }
